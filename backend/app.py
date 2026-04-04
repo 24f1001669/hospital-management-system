@@ -1,11 +1,19 @@
 from flask import Flask
+from flask_jwt_extended import JWTManager
 from models import db, User
+import config
 
 app = Flask(__name__)
+app.config.from_object(config)
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///hms.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
+jwt = JWTManager(app)
+
+from routes.auth import auth_bp
+app.register_blueprint(auth_bp, url_prefix='/auth')
 
 def create_admin():
     admin = User.query.filter_by(role='admin').first()

@@ -1,0 +1,4 @@
+SECRET_KEY = 'secretkey'
+JWT_SECRET_KEY = 'jwtsecretkey'
+SQLALCHEMY_DATABASE_URI = 'sqlite:///hms.db'
+SQLALCHEMY_TRACK_MODIFICATIONS = False
