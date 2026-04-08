@@ -28,15 +28,19 @@ def register():
 
 @auth_bp.route('/login', methods=['POST'])
 def login():
+    
     data = request.get_json()
     username = data.get('username')
     password = data.get('password')
 
     user = User.query.filter_by(username=username, password=password).first()
+    if user.is_blacklisted:
+        return {"message": "User is blacklisted"}, 403
+    
     if not user:
         return jsonify({'message': 'Invalid credentials'}), 401
 
-    access_token = create_access_token(identity={'id': user.id, 'role': user.role})
+    access_token = create_access_token(identity=str(user.id),additional_claims={'role': user.role})
 
     return jsonify({
         'token': access_token,

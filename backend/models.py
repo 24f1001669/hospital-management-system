@@ -9,6 +9,7 @@ class User(db.Model):
     role = db.Column(db.String(20), nullable=False)
     doctor = db.relationship('Doctor', backref='user', uselist=False)
     patient = db.relationship('Patient', backref='user', uselist=False)
+    is_blacklisted = db.Column(db.Boolean, default=False)
 
 class Department(db.Model):
     id = db.Column(db.Integer, primary_key=True)
