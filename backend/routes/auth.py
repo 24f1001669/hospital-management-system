@@ -7,23 +7,31 @@ auth_bp = Blueprint('auth', __name__)
 @auth_bp.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
-    username = data.get('username')
-    password = data.get('password')
-    contact = data.get('contact')
 
-    existing_user = User.query.filter_by(username=username).first()
+    existing_user = User.query.filter_by(username=data['username']).first()
+
     if existing_user:
-        return jsonify({'message': 'User already exists'}), 400
+        return {"message": "Username already taken"}, 400
 
-    user = User(username=username, password=password, role='patient')
+    user = User(
+        username=data['username'],
+        password=data['password'],
+        role='patient'
+    )
+
     db.session.add(user)
     db.session.commit()
 
-    patient = Patient(user_id=user.id, name=username, contact=contact)
+    patient = Patient(
+        user_id=user.id,
+        name=data.get('name', ''),
+        contact=data.get('contact', '')
+    )
+
     db.session.add(patient)
     db.session.commit()
 
-    return jsonify({'message': 'Patient registered successfully'}), 201
+    return {"message": "User registered successfully"}, 201
 
 
 @auth_bp.route('/login', methods=['POST'])

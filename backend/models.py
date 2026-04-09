@@ -23,7 +23,6 @@ class Doctor(db.Model):
     department_id = db.Column(db.Integer, db.ForeignKey('department.id'))
     name = db.Column(db.String(100))
     specialization = db.Column(db.String(100))
-    availability = db.Column(db.String(200))
     appointments = db.relationship('Appointment', backref='doctor', lazy=True)
 
 class Patient(db.Model):
@@ -45,6 +44,15 @@ class Appointment(db.Model):
 class Treatment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     appointment_id = db.Column(db.Integer, db.ForeignKey('appointment.id'), nullable=False)
+    visit_type=db.Column(db.String(50))
+    tests_done=db.Column(db.String(200))
     diagnosis = db.Column(db.String(200))
     prescription = db.Column(db.String(200))
-    notes = db.Column(db.String(200))
+    medicines=db.Column(db.String(200))
+
+class Availability(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    doctor_id = db.Column(db.Integer, db.ForeignKey('doctor.id'))
+    date = db.Column(db.String(20))
+    morning_slot = db.Column(db.Boolean, default=False)
+    evening_slot = db.Column(db.Boolean, default=False)

@@ -4,6 +4,7 @@ from models import db, User, Department
 import config
 from routes.auth import auth_bp
 from routes.admin import admin_bp
+from routes.doctor import doctor_bp
 
 app = Flask(__name__)
 app.config.from_object(config)
@@ -19,6 +20,7 @@ jwt = JWTManager(app)
 
 app.register_blueprint(auth_bp, url_prefix='/auth')
 app.register_blueprint(admin_bp, url_prefix='/admin')
+app.register_blueprint(doctor_bp, url_prefix='/doctor')
 
 def seed_departments():
     if Department.query.first():

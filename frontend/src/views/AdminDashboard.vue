@@ -65,11 +65,11 @@
           <tbody class="table-group-divider">
             <tr v-for="(a, index) in appointments" :key="a.id">
               <td>{{ index + 1 }}</td>
-              <td>{{ a.patient_id }}</td>
-              <td>{{ a.doctor_id }}</td>
+              <td>{{ a.patient_name }}</td>
+              <td>{{ a.doctor_name }}</td>
               <td>{{ a.date }}</td>
               <td>
-                <button class="btn btn-primary btn-sm" @click="$router.push('/patient-history')">view</button>
+                <button class="btn btn-primary btn-sm" style="width:100px" @click="goToHistory(a.patient_id)">View</button>
               </td>
             </tr>
           </tbody>
@@ -104,6 +104,10 @@ export default {
   },
 
   methods: {
+
+    goToHistory(p) {
+      this.$router.push(`/patient-history/${p}`)
+    },
 
     async fetchDoctors() {
       const res = await API.get(`/admin/doctors/search?q=${this.searchQuery}`)
@@ -146,9 +150,13 @@ export default {
     },
 
     async deleteUser(id) {
-      await API.delete(`/admin/delete/user/${id}`)
-      this.fetchDoctors()
-      this.fetchPatients()
+      try {
+        await API.delete(`/admin/delete/user/${id}`)
+        this.fetchDoctors()
+        this.fetchPatients()
+      } catch (err) {
+        alert(err.response?.data?.message || "Delete Failed")
+      }
     },
 
     async toggleBlacklist(d) {

@@ -18,8 +18,6 @@
                 </select>
                 <label>Specialization</label>
                 <input required v-model="doctor.specialization" class="form-control mb-3" style="border: 1px solid gray">
-                <label>Availability</label>
-                <input required v-model="doctor.availability" class="form-control mb-3" style="border: 1px solid gray">
                 <button class="btn btn-success mt-3" @click="createDoctor" type="submit">Create</button>
             </form>
         </div>
