@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from models import db, User, Doctor, Patient, Appointment, Department
+from models import db, User, Doctor, Patient, Appointment, Department, Treatment
 from flask_jwt_extended import jwt_required, get_jwt
 
 admin_bp = Blueprint('admin', __name__)
@@ -237,3 +237,73 @@ def unblacklist_user(id):
     db.session.commit()
 
     return {"message": "User unblacklisted"}
+
+
+@admin_bp.route('/history', methods=['GET'])
+@jwt_required()
+def get_full_history():
+    if not is_admin():
+        return {"message": "Unauthorized"}, 403
+
+    appointments = Appointment.query.filter_by(status="Completed").all()
+
+    result = []
+
+    for a in appointments:
+        patient = Patient.query.get(a.patient_id)
+        doctor = Doctor.query.get(a.doctor_id)
+        dept = Department.query.get(doctor.department_id)
+
+        treatment = Treatment.query.filter_by(appointment_id=a.id).first()
+
+        if treatment:
+            result.append({
+                "date": a.date,
+                "patient": patient.name,
+                "doctor": doctor.name,
+                "department": dept.name,
+                "diagnosis": treatment.diagnosis,
+                "prescription": treatment.prescription,
+                "tests": treatment.tests_done,
+                "medicines": treatment.medicines
+            })
+
+    return result
+
+
+@admin_bp.route('/patient-history/<int:id>', methods=['GET'])
+@jwt_required()
+def get_patient_history_admin(id):
+    if not is_admin():
+        return {"message": "Unauthorized"}, 403
+
+    patient = Patient.query.get(id)
+
+    appointments = Appointment.query.filter_by(
+        patient_id=id,
+        status="Completed"
+    ).all()
+
+    result = []
+
+    for a in appointments:
+        doctor = Doctor.query.get(a.doctor_id)
+        dept = Department.query.get(doctor.department_id)
+
+        treatment = Treatment.query.filter_by(appointment_id=a.id).first()
+
+        if treatment:
+            result.append({
+                "date": a.date,
+                "doctor": doctor.name,
+                "department": dept.name,
+                "diagnosis": treatment.diagnosis,
+                "prescription": treatment.prescription,
+                "tests": treatment.tests_done,
+                "medicines": treatment.medicines
+            })
+
+    return {
+        "patient_name": patient.name,
+        "history": result
+    }

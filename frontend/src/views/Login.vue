@@ -58,6 +58,9 @@ export default {
         } else if (decoded.role === 'doctor') {
           this.$router.push('/doctor')
         }
+        else if (decoded.role === 'patient') {
+          this.$router.push('/patient')
+        }
 
       } catch (err) {
         this.error = 'Invalid credentials'

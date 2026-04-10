@@ -106,7 +106,7 @@ export default {
     },
 
     goToHistory(p) {
-      this.$router.push(`/patient-history/${p.id}`)
+      this.$router.push(`/history/${p.id}`)
     },
 
     logout() {

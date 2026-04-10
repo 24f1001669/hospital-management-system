@@ -106,7 +106,7 @@ export default {
   methods: {
 
     goToHistory(p) {
-      this.$router.push(`/patient-history/${p}`)
+      this.$router.push(`/history/${p}`)
     },
 
     async fetchDoctors() {

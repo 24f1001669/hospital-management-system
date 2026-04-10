@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar navbar-dark bg-dark px-3">
-    <span class="navbar-brand">Welcome Admin</span>
+    <span class="navbar-brand" style="cursor:pointer;" @click="$router.push('/admin')">Welcome, Admin</span>
     <span>
         <input v-model="searchQuery" style="
             height: 40px;

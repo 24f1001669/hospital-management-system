@@ -1,6 +1,6 @@
 <template>
     <nav class="navbar navbar-dark px-3" style="background-color: #3852B4;">
-      <span class="navbar-brand">Welcome {{doctorName}}</span>
+      <span class="navbar-brand" style="cursor: pointer;" @click="$router.push('/doctor')">Welcome, {{doctorName}}</span>
       <button class="btn btn-danger" @click="logout">Logout</button>
     </nav>
 </template>

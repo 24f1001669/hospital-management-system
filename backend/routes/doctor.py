@@ -143,15 +143,15 @@ def add_or_update_treatment(id):
 @doctor_bp.route('/patient-history/<int:id>', methods=['GET'])
 @jwt_required()
 def get_patient_history(id):
-    claims = get_jwt()
-    role = claims.get('role')
-
-    if role not in ['doctor', 'admin']:
-        return {"message": "Unauthorized"}, 403
+    user_id = get_jwt_identity()
+    doctor = Doctor.query.filter_by(user_id=user_id).first()
 
     patient = Patient.query.get(id)
 
-    appointments = Appointment.query.filter(Appointment.patient_id==id).all()
+    appointments = Appointment.query.filter_by(
+        patient_id=id,
+        doctor_id=doctor.id
+    ).all()
 
     result = []
 
@@ -159,22 +159,20 @@ def get_patient_history(id):
         treatment = Treatment.query.filter_by(appointment_id=a.id).first()
 
         if treatment:
-            doctor = Doctor.query.get(a.doctor_id)
             dept = Department.query.get(doctor.department_id)
 
             result.append({
-                "id": treatment.id,
                 "date": a.date,
                 "diagnosis": treatment.diagnosis,
                 "prescription": treatment.prescription,
                 "tests": treatment.tests_done,
                 "medicines": treatment.medicines,
-                "doctor_name": doctor.name,   
+                "doctor_name": doctor.name,
                 "department": dept.name if dept else ""
             })
 
     return {
-        "patient_name": patient.name,   
+        "patient_name": patient.name,
         "history": result
     }
 
