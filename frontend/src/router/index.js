@@ -15,20 +15,20 @@ import BookAppointment from '@/views/BookAppointment.vue'
 import History from '@/views/History.vue'
 
 const routes = [
-  { path: '/', component: Login },
-  { path: '/register',component:Register},
-  { path: '/admin', component: AdminDashboard },
-  { path: '/doctor', component: DoctorDashboard },
-  { path: '/add-doctor', component: AddDoctor },
-  { path: '/edit-doctor/:id', component: EditDoctor },
-  { path: '/update-history/:appointmentId', component: UpdateHistory },
-  { path: '/availability', component: DoctorAvailability },
-  { path: '/patient', component: PatientDashboard },
-  { path: '/department/:id', component: DepartmentDetails },
-  { path: '/edit-profile', component: EditProfile },
-  { path: '/patient/doctor-availability/:id', component: BookAppointment },
-  { path: '/history', component: History },
-  { path: '/history/:id', component: History }
+  { path: '/', component: Login ,meta: { title: 'Login' } },
+  { path: '/register',component:Register, meta: { title: 'Register' }},
+  { path: '/admin', component: AdminDashboard ,meta: { title: 'Admin Dashboard' }},
+  { path: '/doctor', component: DoctorDashboard,meta: { title: 'Doctor Dashboard' } },
+  { path: '/add-doctor', component: AddDoctor,meta: { title: 'Add a new doctor' } },
+  { path: '/edit-doctor/:id', component: EditDoctor,meta: { title: 'Edit doctor' } },
+  { path: '/update-history/:appointmentId', component: UpdateHistory,meta: { title: 'Update patient history' } },
+  { path: '/availability', component: DoctorAvailability,meta: { title: 'Availability of doctor' } },
+  { path: '/patient', component: PatientDashboard,meta: { title: 'Patient Dashboard' } },
+  { path: '/department/:id', component: DepartmentDetails,meta: { title: 'Department Details' } },
+  { path: '/edit-profile', component: EditProfile,meta: { title: 'Edit profile' } },
+  { path: '/patient/doctor-availability/:id', component: BookAppointment,meta: { title: 'Book an appointment' } },
+  { path: '/history', component: History,meta: { title: 'Patient history' } },
+  { path: '/history/:id', component: History,meta: { title: 'Patient history' } }
 ]
 
 const router = createRouter({
@@ -38,6 +38,8 @@ const router = createRouter({
 
 router.beforeEach((to) => {
   const token = localStorage.getItem('token')
+
+  document.title = to.meta.title || 'Vite';
 
   if (to.path === '/' || to.path === '/register') {
     if (!token) return true
